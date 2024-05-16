@@ -61,20 +61,52 @@ def MolLogP(m):
     return rdMolDescriptors.CalcCrippenDescriptors(m)[0]
 
 
-def get_fps(smiles_list):
-    mols = [Chem.MolFromSmiles(smile) for smile in smiles_list]
-    fps = [AllChem.GetMorganFingerprintAsBitVect(mol, 2, nBits = 2048) for mol in mols]
-    return fps
-           
-
+def get_descriptors(smiles): 
+    descriptors = [] 
+    mols = [Chem.MolFromSmiles(smile) for smile in smiles] 
+    descriptor_names = list(rdMolDescriptors.Properties.GetAvailableProperties()) 
+    get_ds = rdMolDescriptors.Properties(descriptor_names) 
+    for mol in mols: 
+        ds = get_ds.ComputeProperties(mol)
+        descriptors.append(ds)
+        return descriptors
 
 def Melanin(mol):
-    """Calculates predicted corneal permeability"""
+    """Calculates predicted melanin binding"""
     model = pickle.load(open('pickle_model_melanin.pkl', 'rb'))
-    smiles = Chem.MolToSmiles (mol)
-    fps = get_fps([smiles])
-    fps_array = np.array(fps[0])
-    mel = model.predict(fps_array.reshape(1, -1))
-    return mel[0]
+    ds = np.array(get_descriptors([Chem.MolToSmiles (mol)])).reshape(1, -1)
+    mel = model.predict_proba(ds)[0][1]
+
+    return mel 
+
+
+def Irritation(mol):
+    model = pickle.load(open('pickle_model_irritation.pkl', 'rb'))
+    ds = np.array(get_descriptors([Chem.MolToSmiles (mol)])).reshape(1, -1)
+    irr = model.predict_proba(ds)[0][1]
+
+    return irr
+
+
+
+def smi_to_descriptors(smiles):
+    descriptors = []
+    mols = [Chem.MolFromSmiles(smile) for smile in smiles]
+    for mol in mols:
+        lipinskiHBD = Descriptors.NumHDonors(mol)
+        NumHBD = Descriptors.NumHDonors(mol)
+        NumHeterocycles = Chem.rdMolDescriptors.CalcNumHeterocycles(mol)
+        CrippenClogP = Descriptors.MolLogP(mol)
+        hallKierAlpha = Descriptors.HallKierAlpha(mol)
+        descriptor_values = [lipinskiHBD, NumHBD, NumHeterocycles, CrippenClogP, hallKierAlpha]
+        descriptors.append(descriptor_values)
+    return descriptors
+
+def Corneal(mol): 
+    #"""Calculates predicted corneal permeability""" 
+    model = pickle.load(open('pickle_model_corneal.pkl', 'rb')) 
+    ds = smi_to_descriptors([Chem.MolToSmiles(mol)]) 
+    cor = model.predict(ds) 
+    return cor[0]
 
 
