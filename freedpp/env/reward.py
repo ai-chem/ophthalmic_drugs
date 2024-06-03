@@ -6,6 +6,9 @@ import sklearn
 import numpy as np
 from rdkit import Chem
 from rdkit.Chem import AllChem
+from rdkit.Chem import MACCSkeys
+import torch
+from kan.KAN import KAN
 
 class Reward:
     def __init__(self, property, reward, weight=1.0, preprocess=None):
@@ -71,23 +74,29 @@ def get_descriptors(smiles):
         descriptors.append(ds)
         return descriptors
 
-def Melanin(mol):
-    """Calculates predicted melanin binding"""
-    model = pickle.load(open('pickle_model_melanin.pkl', 'rb'))
-    ds = np.array(get_descriptors([Chem.MolToSmiles (mol)])).reshape(1, -1)
-    mel = model.predict_proba(ds)[0][1]
-
-    return mel 
-
-
 def Irritation(mol):
     model = pickle.load(open('pickle_model_irritation.pkl', 'rb'))
     ds = np.array(get_descriptors([Chem.MolToSmiles (mol)])).reshape(1, -1)
     irr = model.predict_proba(ds)[0][1]
-
     return irr
 
+def get_fps(smiles):
+    mols = [Chem.MolFromSmiles(smile) for smile in smiles]
+    fps = []
+    for i in range(len(mols)):
+        fp = [int(bit) for bit in MACCSkeys.GenMACCSKeys(mols[i]).ToBitString()][:166]
+        fps.append(fp)
+    fps_array = np.array(fps, dtype=np.int32)  # Convert list of NumPy arrays to a single NumPy array
+    fps_tensor = torch.tensor(fps_array)
+    return fps_tensor
 
+
+def Melanin(mol):
+    model = KAN(width=[166,1,1], grid=10, k=3, seed=2000)
+    model.load_state_dict(torch.load('kan_model.pth'))
+    fps_tensor = get_fps([Chem.MolToSmiles(mol)])
+    mel = model(fps_tensor)[:, 0].detach().numpy()
+    return mel[0]
 
 def smi_to_descriptors(smiles):
     descriptors = []
@@ -103,7 +112,6 @@ def smi_to_descriptors(smiles):
     return descriptors
 
 def Corneal(mol): 
-    #"""Calculates predicted corneal permeability""" 
     model = pickle.load(open('pickle_model_corneal.pkl', 'rb')) 
     ds = smi_to_descriptors([Chem.MolToSmiles(mol)]) 
     cor = model.predict(ds) 
