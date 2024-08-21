@@ -126,7 +126,6 @@ def Irritation(mol):
 
 
 def Corneal(mol): 
-    #"""Calculates predicted corneal permeability""" 
     model = xgb.XGBRegressor(random_state=10)
     model.load_model('corneal.json') 
     maccs = get_maccs([Chem.MolToSmiles(mol)]) 
