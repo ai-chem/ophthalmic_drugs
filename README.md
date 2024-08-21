@@ -11,6 +11,7 @@ conda env create -f environment.yml
 # Activate environment
 conda activate freedpp
 ```
+We used KAN model for melanin binding prediction. You can install pykan env from [here](https://github.com/KindXiaoming/pykan)
 ## Usage
 ```
 python main.py     --exp_root ../experiments
