@@ -22,8 +22,9 @@ python main.py     --exp_root ../experiments
 --epochs 100     --commands "train,sample"     --reward_version soft     --box_center "27.116,24.090,14.936"
 --box_size "9.427,10.664,10.533"     --seed 150     --name freedpp
  --objectives "DockingScore,Corneal,Melanin,Irritation"     --weights "1.0,1.0,1.0,1.0"
-# You can choose objectives for reward function, i.g., --objectives "DockingScore"
 ```
+You can choose objectives for reward function, i.g., --objectives "DockingScore"
+
 ## Contents
 * Data
   * Contains .csv files with datasets including SMILES and target value
