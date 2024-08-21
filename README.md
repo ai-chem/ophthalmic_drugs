@@ -13,6 +13,17 @@ conda activate freedpp
 ```
 We used KAN model for melanin binding prediction. You can install pykan environment from [here](https://github.com/KindXiaoming/pykan)
 
+## Dependency
+
+| Package | Version | 
+|:----------------:|:---------:|
+| Python | 3.7.12 | 
+| PyTorch | 1.12.1 |
+| TorchVision | 0.13.1 |
+| CUDA | 11.3.1 |
+| DGL | 0.9.1.post1 |
+| RDKit | 2020.09.1.0 |
+
 ## Usage
 ```
 python main.py     --exp_root ../experiments
