@@ -10,6 +10,12 @@ conda activate freedpp
 ```
 ## Usage
 ```
-python main.py     --exp_root ../experiments     --alert_collections ../alert_collections.csv     --fragments ../zinc_crem.json     --receptor ../COX-2.pdbqt     --vina_program ./env/qvina02     --starting_smile "O=C(O)C(*)c1c(*)c(*)c(*)c(*)c1(*)"     --fragmentation crem     --num_sub_proc 12     --n_conf 1     --exhaustiveness 1     --save_freq 10     --epochs 100     --commands "train,sample"     --reward_version soft     --box_center "27.116,24.090,14.936"     --box_size "9.427,10.664,10.533"     --seed 150     --name freedpp     --objectives "DockingScore,Corneal,Melanin,Irritation"     --weights "1.0,1.0,1.0,1.0"
+python main.py     --exp_root ../experiments
+ --alert_collections ../alert_collections.csv     --fragments ../zinc_crem.json
+ --receptor ../COX-2.pdbqt     --vina_program ./env/qvina02     --starting_smile "O=C(O)C(*)c1c(*)c(*)c(*)c(*)c1(*)"
+ --fragmentation crem     --num_sub_proc 12     --n_conf 1     --exhaustiveness 1     --save_freq 10
+--epochs 100     --commands "train,sample"     --reward_version soft     --box_center "27.116,24.090,14.936"
+--box_size "9.427,10.664,10.533"     --seed 150     --name freedpp
+ --objectives "DockingScore,Corneal,Melanin,Irritation"     --weights "1.0,1.0,1.0,1.0"
 # You can choose objectives for reward function, i.g., --objectives "DockingScore"
 ```
