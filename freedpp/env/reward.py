@@ -99,7 +99,7 @@ def Melanin(mol):
 
 
 def Irritation(mol):
-    model = pickle.load(open('irritation.pkl', 'rb'))
+    model = pickle.load(open('pickle_model_irritation.pkl', 'rb'))
     fps = smi_to_maccs([Chem.MolToSmiles(mol)])
     irr = model.predict_proba(fps)[0][1]
     return irr
