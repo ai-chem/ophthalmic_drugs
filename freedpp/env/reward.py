@@ -88,30 +88,12 @@ def smi_to_maccs(smiles):
     fps_array = np.array(fps, dtype=np.int32).reshape(1, -1) 
     return fps_array
 
-
-
-def get_maccs(smiles):
-    mols = [Chem.MolFromSmiles(smile) for smile in smiles]
-    fps = []
-    for i in range(len(mols)):
-        fp = [int(bit) for bit in MACCSkeys.GenMACCSKeys(mols[i]).ToBitString()][:167]
-        fps.append(fp)
-    fps_array = np.array(fps, dtype=np.int32)
-    indices_to_drop = [11, 33, 47, 49, 50, 51, 55, 56, 58, 59, 60, 61, 63, 64, 67, 69, 70, 71, 73, 76, 80, 81, 88, 94, 102, 105, 106, 107, 110, 119, 124, 130, 134, 135, 143, 147]  
-    new_array = np.delete(fps_array, indices_to_drop)
-    maccs = new_array.reshape(1, -1)
-    print(maccs.shape)
-    return maccs 
-
-
 def Melanin(mol):
 
     model = KAN(width=[166,1,1], grid=10, k=3, seed=2000)
     model.load_state_dict(torch.load('kan_model.pth'))
     fps_tensor = get_fps([Chem.MolToSmiles(mol)])
     mel = model(fps_tensor)[:, 0].detach().numpy()
-
-
     return mel[0]
 
 
@@ -120,7 +102,6 @@ def Irritation(mol):
     model = pickle.load(open('irritation.pkl', 'rb'))
     fps = smi_to_maccs([Chem.MolToSmiles(mol)])
     irr = model.predict_proba(fps)[0][1]
-
     return irr
 
 
@@ -128,6 +109,6 @@ def Irritation(mol):
 def Corneal(mol): 
     model = xgb.XGBRegressor(random_state=10)
     model.load_model('corneal.json') 
-    maccs = get_maccs([Chem.MolToSmiles(mol)]) 
+    maccs = smi_to_maccs([Chem.MolToSmiles(mol)]) 
     cor = model.predict(maccs) 
     return cor[0]
