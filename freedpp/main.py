@@ -60,9 +60,9 @@ def init_rewards(args):
         'PAINS': Reward(PatternFilter(patterns['PAINS']), identity, preprocess=preprocess),
         'SureChEMBL': Reward(PatternFilter(patterns['SureChEMBL']), identity, preprocess=preprocess),
         'Glaxo': Reward(PatternFilter(patterns['Glaxo']), identity, preprocess=preprocess),
-        'Corneal': Reward(Corneal, OutOfRange(lower=3.5, upper=7.5, hard=hard), preprocess=preprocess),
-        'Melanin': Reward(Melanin, OutOfRange(lower=0, upper=1, hard=hard), preprocess=preprocess),
-        'Irritation': Reward(Irritation, OutOfRange(lower=0.1, upper=0.3, hard=hard), preprocess=preprocess),
+        'Corneal': Reward(Corneal, OutOfRange(lower=5, upper=7, hard=hard), preprocess=preprocess),
+        'Melanin': Reward(Melanin, OutOfRange(lower=0.9, upper=1, hard=hard), preprocess=preprocess),
+        'Irritation': Reward(Irritation, OutOfRange(lower=0.0, upper=0.1, hard=hard), preprocess=preprocess),
     }
     rewards = dict()
     for name, weight in zip(args['objectives'], args['weights']):
