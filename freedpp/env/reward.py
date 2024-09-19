@@ -90,7 +90,7 @@ def smi_to_maccs(smiles):
 
 def Melanin(mol):
 
-    model = KAN(width=[166,1,1], grid=10, k=3, seed=2000)
+    model = KAN(width=[166,1,1], grid=10, k=5, seed=2024)
     model.load_state_dict(torch.load('kan_model.pth'))
     fps_tensor = get_fps([Chem.MolToSmiles(mol)])
     mel = model(fps_tensor)[:, 0].detach().numpy()
