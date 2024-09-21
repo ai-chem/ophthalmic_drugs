@@ -41,4 +41,4 @@ You can choose objectives for reward function, i.g., --objectives "DockingScore"
   * Contains .csv files with datasets including SMILES and target value
   * Contains .ipynb files with code for data preprossesing
 * Scripts
-  * Contains .ipynb files with code for running ML models and saved model in .pkl, .json and .pth format
+  * Contains .ipynb files with code for running ML models
